@@ -1,5 +1,5 @@
 {
-    "name": "yarisrespect/yii2-import-excel",
+    "name": "yarisrespect/yii2-excel",
     "description": "Import *.xls by PHPExcel for Yii 2 framework",
     "keywords": [
         "yii2",
@@ -7,7 +7,7 @@
         "phpexcel",
         "import"
     ],
-    "homepage": "https://github.com/Yarisrespect/yii2-import-excel",
+    "homepage": "https://github.com/Yarisrespect/yii2-excel",
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "authors": [
