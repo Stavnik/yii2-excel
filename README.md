@@ -1,6 +1,6 @@
 # yii2-import-excel
 
-Import *.xls by PHPExcel for Yii 2 framework
+Import *.xls, *.xlsx by PHPExcel for Yii 2 framework
 
 Model.php:
 
