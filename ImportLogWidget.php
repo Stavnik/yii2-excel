@@ -22,12 +22,8 @@ class ImportLogWidget extends Widget {
         if( $log = $this->model->getImportLog() ){
 
             $content = [];
-
-            foreach($log as $i => $msg){
-                $content[] = Html::tag('li', ++$i.') '.$msg );
-            }
-
-            return Html::tag('ul', implode('\n', $content), $this->options );
+            foreach($log as $msg) $content[] = Html::tag('li', $msg );
+            return Html::tag('ul', implode('', $content), $this->options );
         }
         return null;
     }

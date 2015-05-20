@@ -8,8 +8,8 @@
 
 namespace yarisrespect\excel;
 
+use Yii;
 use yii\base\Behavior;
-use yii\data\ArrayDataProvider;
 use yii\validators\FileValidator;
 use yii\web\UploadedFile;
 
@@ -37,6 +37,8 @@ class ImportBehavior extends Behavior {
 
                 return true;
             } else $this->owner->addError($fileAttribute, $error);
+        } else if(isset($_FILES['Dvk'])) {
+            $this->owner->addError($fileAttribute, Yii::t('app', 'Choose file for import!') );
         }
 
         return false;
@@ -44,16 +46,22 @@ class ImportBehavior extends Behavior {
 
     private function import_row( $data = [] ){
         if( is_string( $this->onImportRow ) && method_exists($this->owner, $this->onImportRow) ){
-            return call_user_func([ $this->owner, $this->onImportRow ], $data);
+            return call_user_func_array ([ $this->owner, $this->onImportRow ], $data);
         } else if( $this->onImportRow instanceof \Closure ){
-            return call_user_func($this->onImportRow, $data);
+            return call_user_func_array ($this->onImportRow, $data);
         }
         return false;
     }
 
-    public function importExcel(){
+    private $_current_row = 0;
+
+    public function importExcel($function=null){
 
         if( $this->upload_file() ){
+
+            if( $function ){
+                $this->onImportRow = $function;
+            }
 
             //$reader = \PHPExcel_IOFactory::createReader( /*$this->defaultFormat*/ );
             $objPHPExcel = \PHPExcel_IOFactory::load( $this->_uploaded_file->tempName );
@@ -68,6 +76,7 @@ class ImportBehavior extends Behavior {
                 $row = [];
                 foreach ($cellIterator as $cell) $row[] = $cell->getValue();
 
+                $this->_current_row = $i;
                 if( $this->import_row([
                     'row' => $row,
                     'index' => $i,
@@ -88,6 +97,6 @@ class ImportBehavior extends Behavior {
     }
 
     public function addLog($msg) {
-        $this->_log_data_provider[] = $msg;
+        $this->_log_data_provider[] = $this->_current_row.': '.$msg;
     }
 }
